@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
  */
 
 const login = async (req, res) => {
-  const { email, password } = rec.body;
+  const { email, password } = req.body;
   if (!email || !password) {
     return res
       .status(400)
@@ -23,14 +23,14 @@ const login = async (req, res) => {
 
   const isPasswordCorrect =
     user && (await brypt.compare(password, user.password));
-  //   const secret = process.env.JWT_SECRET;
+    const secret = process.env.JWT_SECRET;
 
   if (user && isPasswordCorrect && secret) {
     res.status(200).json({
       id: user.id,
       email: user.email,
       name: user.name,
-      //   token: jwt.sign({ id: user.id }, secret, { expiresIn: '30d' })
+        token: jwt.sign({ id: user.id }, secret, { expiresIn: '30d' })
     });
   } else {
     return res.status(400).json({ message: "Неверно введен логин или пароль" });
@@ -88,12 +88,18 @@ const register = async (req, res) => {
   } else {
     return res.status(400).json({ message: 'Не удалось создать пользователя' })
   }
-  
+
 };
 
+/**
+ * 
+ * @route GET /api/user/current
+ * @desc Текущий пользователь
+ * @access Private
+ */
 const current = async (req, res) => {
-  res.send("current");
-};
+    return res.status(200).json(req.user)
+  }
 
 module.exports = {
   login,

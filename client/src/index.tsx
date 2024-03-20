@@ -9,13 +9,14 @@ import "./index.css";
 import { Paths } from "./paths";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
+import { Employees } from "./pages/employees";
 import { ConfigProvider, theme } from "antd";
 import { Auth } from "./features/auth/auth";
 
 const router = createBrowserRouter([
   {
     path: Paths.home,
-    element: <h1>Employees</h1>,
+    element: <Employees/>,
   },
   {
     path: Paths.login,

@@ -1,20 +1,22 @@
 import { Row } from "antd";
 import { EmployeeForm } from "../../components/employee-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../features/auth/authSlice";
 import { useState, useEffect } from "react";
-import { useAddEmployeeMutation } from "../../app/services/employees";
+import { useGetEmployeeQuery, useEditEmployeeMutation} from "../../app/services/employees";
 import { Employee } from "@prisma/client";
 import { isErrorWithMessage } from "../../utils/is-error-with-message";
 import { Paths } from "../../paths";
 import { Layout } from "../../components/layout";
 
-export const AddEmployee = () => {
+export const EditEmployee = () => {
   const navigate = useNavigate();
+  const params = useParams<{ id: string }>();
   const user = useSelector(selectUser);
   const [error, setError] = useState("");
-  const [addEmployee] = useAddEmployeeMutation();
+  const { data, isLoading } = useGetEmployeeQuery(params.id || "");
+  const [editEmployee] = useEditEmployeeMutation();
 
   useEffect(() => {
     if (!user) {
@@ -22,9 +24,18 @@ export const AddEmployee = () => {
     }
   }, [user, navigate]);
 
-  const handleAddEmployee = async (data: Employee) => {
+  if (isLoading) {
+    return <span>Загрузка</span>
+  }
+
+  const handleAddEmployee = async (employee: Employee) => {
     try {
-      await addEmployee(data).unwrap();
+        const editedEmployee = {
+            ...data,
+            ...employee
+          };
+    
+          await editEmployee(editedEmployee).unwrap();
 
       navigate(`${Paths.status}/created`);
     } catch (err) {
@@ -43,9 +54,10 @@ export const AddEmployee = () => {
       <Row align="middle" justify="center">
         <EmployeeForm
           onFinish={handleAddEmployee}
-          title="Добавить сутрудника"
-          btnText="Добавить"
-          error={error}
+          title="Редактировать сотрудника"
+          employee={data}
+          btnText="Редактировать"
+          error={ error }
         />
       </Row>
     </Layout>

@@ -16,8 +16,8 @@ import { Paths } from "../../paths";
 import { isErrorWithMessage } from "../../utils/is-error-with-message";
 
 export const Employee = () => {
-    const navigate = useNavigate();
-  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
   const params = useParams<{ id: string }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data, isLoading } = useGetEmployeeQuery(params.id || "");
@@ -95,7 +95,7 @@ export const Employee = () => {
           </Space>
         </>
       )}
-      <ErrorMessage message={error}/>
+      <ErrorMessage message={error} />
       <Modal
         title="Подтвердите удаление"
         open={isModalOpen}

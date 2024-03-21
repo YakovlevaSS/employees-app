@@ -40,9 +40,11 @@ useEffect(() => {
   }
 }, [user, navigate]);
 
+const gotToAddUser = () => navigate(Paths.employeeAdd);
+
   return (
     <Layout>
-     <CustomButton type="primary" onClick={() => null} icon={<PlusCircleOutlined/>}>
+     <CustomButton type="primary" onClick={gotToAddUser} icon={<PlusCircleOutlined/>}>
         Добавить
     </CustomButton> 
     <Table
